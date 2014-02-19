@@ -1,6 +1,8 @@
 (function ( $ ) {
 
 $.fn.skate = function(settings) {
+	// Body access.
+	var body = $(document.body);
 	
 	// Local access to the element.
 	var me = this;
@@ -14,16 +16,42 @@ $.fn.skate = function(settings) {
 	// Set options.
 	var options = $.extend({}, defaults, settings);
 	
+	// Whether there is CSS transitions support.
+	var transitions = false;
+	
 	// Whether to show debug messages.
 	var debug = options.debug && window.console;
+
+	// Detect support for CSS Transitions.	
+	function detectTransitions() {
+		var test = document.createElement('p').style;
+		if(
+			'transition' in test || 
+			'WebkitTransition' in test || 
+			'MozTransition' in test || 
+			'msTransition' in test
+		) {
+			transitions = true;
+			return true;
+		} else {
+			transitions = false;
+			return false;
+		}
+	}
 	
-	// An object of slides in the current slider.
-	me.slides = {
-			'current': false,
-			'next': false,
-			'previous': false,
-			'all': []
-		};
+	// Handle autoplay of next slide.
+	function autoplayNext() {
+		me.slides.current = getNextSlide();
+		setNextPreviousFromCurrent();
+		setCurrentClass();
+	}
+	
+	// Handle autoplay of previous slide.
+	function autoplayPrevious() {
+		me.slides.current = getPreviousSlide();
+		setNextPreviousFromCurrent();
+		setCurrentClass();
+	}
 	
 	// Get the next slide relative to slide or the first if slide is the last item.
 	function getNextSlide(slide) {
@@ -59,8 +87,226 @@ $.fn.skate = function(settings) {
 	
 	// Remove target classes and add to the current.
 	function setCurrentClass() {
-		me.slides.all.removeClass('skate-target');
-		me.slides.current.addClass('skate-target');
+		var foundCurrent = false;
+		// If we can use CSS to handle the swap, use CSS.
+		if(options.css || options.animation === 'none') {
+			if(options.css) {
+				me.slides.all.each(updateCSSTransitions);
+			}
+			me.slides.all.removeClass('skate-target');
+			me.slides.current.addClass('skate-target');
+		// Otherwise, animate it with jQuery.
+		} else {
+			me.slides.all.each(handleAnimation);
+		}
+	}
+	
+	// Update CSS transitions to respect JS settings.
+	function updateCSSTransitions() {
+		var el = $(this),
+			isCurrent = (el.get(0) === me.slides.current.get(0));
+			
+		// Set whether we've found the current slide so we can set transitions.
+		if(me.slides.all.index(el) >= me.slides.all.index(me.slides.current)) {
+			foundCurrent = true;
+		}
+		
+		switch(options.animation) {
+			case 'crossfade':
+				$(this).css(
+					{
+						'-webkit-transition': 'opacity ' + options.transition + 's ease',
+						'-moz-transition': 'opacity ' + options.transition + 's ease',
+						'transition': 'opacity ' + options.transition + 's ease'
+					}
+				);
+			break;
+			case 'slide':
+				if(isCurrent) {
+					$(this).css(
+						{
+							'-webkit-transition': '-webkit-transform ' + 
+								options.transition + 's ease-in, visibility 0s ease',
+							'-moz-transition': '-moz-transform ' + 
+								options.transition + 's ease-in, visibility 0s ease',
+							'transition': 'transform ' + 
+								options.transition + 's ease-in, visibility 0s ease'
+						}
+					);
+				} else if(foundCurrent) {
+					$(this).css(
+						{
+							'-webkit-transition': '-webkit-transform ' + 
+								options.transition + 's ease-in, visibility 0s ease ' + 
+								options.transition + 's, left 0s ease ' + 
+								options.transition + 's',
+							'-moz-transition': '-moz-transform ' + options.transition + 
+								's ease-in, visibility 0s ease ' + options.transition + 
+								's, left 0s ease ' + options.transition + 's',
+							'transition': 'transform ' + options.transition + 
+								's ease-in, visibility 0s ease ' + options.transition + 
+								's, left 0s ease ' + options.transition + 's',
+						}
+					);
+				} else {
+					$(this).css(
+						{
+							'-webkit-transition': '-webkit-transform ' + options.transition + 
+								's ease-in 0s, visibility 0s ease ' + 
+								options.transition + 's',
+							'-moz-transition': '-moz-transform ' + options.transition + 
+								's ease-in 0s, visibility 0s ease ' + 
+								options.transition + 's',
+							'transition': 'transform ' + options.transition + 
+								's ease-in 0s, visibility 0s ease ' + 
+								options.transition + 's'
+						}
+					);
+				}
+			break;
+		}
+	}
+	
+	// Decide how to animate things.
+	function handleAnimation() {
+		var el = $(this),
+			isCurrent = (el.get(0) === me.slides.current.get(0)),
+			foundCurrent = false;
+
+		// Set whether we've found the current slide so we can pick a direction.
+		if(me.slides.all.index(el) >= me.slides.all.index(me.slides.current)) {
+			foundCurrent = true;
+		}
+		
+		// Figure out which animation we need and apply it.
+		switch(options.animation) {
+			case 'crossfade':
+				// If this is the new current slide, fade it in and change the class.
+				if(isCurrent) {
+					el.animate(
+							{'opacity': 1}, 
+							options.transition * 1000,
+							'linear',
+							function() {
+								$(this).addClass('skate-target');
+							}
+						);
+				// If not, fade it out and change the class.
+				} else {
+					el.animate(
+							{'opacity': 0}, 
+							options.transition * 1000,
+							'linear',
+							function() {
+								$(this).removeClass('skate-target');
+							}
+						);
+				}
+			break;
+			case 'slide':
+				// If this is the current slide, slide it in and change the class.
+				if(isCurrent) {
+					el.animate(
+							{'left': 0}, 
+							options.transition * 1000,
+							'linear',
+							function() {
+								$(this).addClass('skate-target');
+							}
+						);
+				// If not, figure out how to handle the slide.
+				} else {
+					// If the current slide is the first slide, and the last slide is the
+					// slide we are animating from, and the slide we are animating
+					// is not the last slide, move it without animating and clear the 
+					// target.  This is to prevent weird overlap as the animation from
+					// off screen right to off screen left is 2x as long.
+					if(
+						me.slides.current.get(0) === me.slides.all.get(0) &&
+						me.slides.all.last().is('.skate-target') &&
+						this !== me.slides.all.last().get(0)
+					) {
+						$(this).css('left', foundCurrent ? '100%' : '-100%')
+							.removeClass('skate-target');
+								
+					// Otherwise, animate the slide off screen, then remove the class.
+					} else {
+						el.animate(
+								{'left': foundCurrent ? '100%' : '-100%'}, 
+								options.transition * 1000,
+								'linear',
+								function() {
+									$(this).removeClass('skate-target');
+								}
+							);
+					}
+				}
+			break;
+			case 'cards':
+				// If the slide is the new current slide, put it in place.
+				if(isCurrent) {
+					el.css('top', 0).addClass('skate-target');
+					
+				// Otherwise, animate the slide out of view.
+				} else {
+					el.css('z-index', 4).animate(
+							{'top': jqme.outerHeight() + 'px'}, 
+							options.transition * 1000,
+							'linear',
+							function() {
+								$(this).removeClass('skate-target')
+									.css('z-index', '');
+							}
+						);
+				}
+			break;
+		}
+	}
+	
+	// Handle swapping to next slide.
+	me.setKeyboardFocus = function() {
+		body.data('skate-key-event-attached', me);
+	}
+	
+	// Handle swapping to next slide.
+	me.nextSlide = function() {
+		me.slides.current = getNextSlide();
+		setNextPreviousFromCurrent();
+		setCurrentClass();
+	}
+	
+	// Handle swapping to previous slide.
+	me.previousSlide = function() {
+		me.slides.current = getPreviousSlide();
+		setNextPreviousFromCurrent();
+		setCurrentClass();
+	}
+	
+	// Add the transitions to the delay in case the transition time is very long.
+	options.delay += options.transition;
+	
+	// Detect whether the browser does transitions and update whether we will use CSS.
+	detectTransitions();
+	if(options.css && !transitions) {
+		options.css = false;
+	}
+	
+	// An object of slides in the current slider.
+	me.slides = {
+			'current': false,
+			'next': false,
+			'previous': false,
+			'all': []
+		};
+	
+	// The autoplay interval
+	me.interval = false;
+	
+	// Disable CSS support if requested.
+	if(!options.css) {
+		me.removeClass('skate-css');
+	} else {
+		me.addClass('skate-css');
 	}
 	
 	// Validate animation type.  Set a default if invalid.
@@ -70,6 +316,8 @@ $.fn.skate = function(settings) {
 				console.log('Invalid animation type.  Using crossfade.');
 			}
 			options.animation = 'crossfade';
+		case 'none':
+		break;
 		case 'crossfade':
 		break;
 		case 'slide':
@@ -78,32 +326,72 @@ $.fn.skate = function(settings) {
 		break;
 	}
 	
+	// Set the animation style for CSS use.
 	me.attr('data-skate', options.animation);
 	
 	// Handle clicks to nav things.
-	me.on(
+	me.parent().on(
 		'click',
 		function(e) {
 			var el = $(e.target),
 				target = $(el.attr('href'));
-				
 			// If there is a target and the target is a slide...
 			if(target.length && me.slides.all.filter(target).length) {
 				e.preventDefault();
 				me.slides.current = target;
 				setNextPreviousFromCurrent();
 				setCurrentClass();
+				me.setKeyboardFocus();
+				clearInterval(me.interval);
 			}
+		}
+	).on(
+		'mouseover',
+		function() {
+			me.setKeyboardFocus();
 		}
 	);
 	
+	// Attach keyboard controls to the first skate instance.
+	if(!body.data('skate-key-event-attached')) {
+		body.on(
+			'keyup',
+			function(e) {
+				var body = $(document.body),
+					slidecont = body.data('skate-key-event-attached');
+				switch(e.keyCode) {
+					// right arrow
+					case 39:  
+						slidecont.nextSlide();
+						clearInterval(slidecont.interval);
+					break;
+					// left arrow
+					case 37: 
+						slidecont.previousSlide();
+						clearInterval(slidecont.interval);
+					break;
+				}
+			}
+		).data('skate-key-event-attached', me);
+	}
+	
+	// Set the initial slides.
 	me.slides.all = me.find(options.slides);
 	me.slides.current = me.slides.all.filter(options.first);
+	
+	// If the URL's hash matches a slide, set that as the current and clear the hash.
+	if(location.hash && me.slides.all.filter($(location.hash)).length) {
+		me.slides.current = me.slides.all.filter($(location.hash));
+		location.hash = '';
+	}
 		
 	setNextPreviousFromCurrent();
 	setCurrentClass();
 	
-	//console.log(me.slides.all, me.slides.next, me.slides.previous, me.slides.current);
+	// If autoplay, start autoplaying.
+	if(options.autoplay) {
+		me.interval = setInterval(autoplayNext, options.delay * 1000);
+	}
 	
 	// Return the modified element.
 	return me;
@@ -111,11 +399,13 @@ $.fn.skate = function(settings) {
 
 $.fn.skate.defaults = {
 	'debug': false,				// Whether to show debug messages.
-	'animation': 'crossfade', 	// Animation types: slide, cards, crossfade.
+	'autoplay': true,			// Whether to autoplay the slide show.
+	'animation': 'crossfade', 	// Animation types: slide, cards, crossfade, or none.
 	'delay': 5,					// How long to show a single slide.
 	'transition': .5,			// How long it should take to transition between slides.
 	'slides': '> *',			// Query to get slide elements relative to container.
 	'first': ':first-child',	// Filter slides and use this as the first slide.
+	'css': true					// Whether to use CSS3 transitions when available.
 };
 
 }( jQuery ));

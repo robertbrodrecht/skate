@@ -82,18 +82,18 @@ ul.skate > li {
 	z-index: 99;
 }
 
-.skate.skate-no-js > .skate-target ~ :last-child,
-.skate.skate-no-js > :target ~ :last-child,
-.skate.skate-no-js > * {
+.skate > .skate-target ~ :last-child,
+.skate > :target ~ :last-child,
+.skate > * {
 	z-index: 1;
 }
 
-.skate.skate-no-js > :last-child {
+.skate > :last-child {
 	z-index: 2;
 }
 
-.skate.skate-no-js > .skate-target,
-.skate.skate-no-js > :target {
+.skate > .skate-target,
+.skate > :target {
 	z-index: 2;
 }
 
@@ -103,25 +103,25 @@ ul.skate > li {
 CROSSFADE
 
 **/
-[data-skate=crossfade].skate.skate-no-js > * {
+[data-skate=crossfade].skate.skate-css > * {
 	-webkit-transition: opacity .5s ease;
 	-moz-transition: opacity .5s ease;
 	transition: opacity .5s ease;
 }
 
-[data-skate=crossfade].skate.skate-no-js > .skate-target ~ :last-child,
-[data-skate=crossfade].skate.skate-no-js > :target ~ :last-child,
-[data-skate=crossfade].skate.skate-no-js > * {
+[data-skate=crossfade].skate.skate-css > .skate-target ~ :last-child,
+[data-skate=crossfade].skate.skate-css > :target ~ :last-child,
+[data-skate=crossfade].skate.skate-css > * {
 	opacity: 0;
 	z-index: 1;
 }
 
-[data-skate=crossfade].skate.skate-no-js > :last-child {
+[data-skate=crossfade].skate.skate-css > :last-child {
 	opacity: 1;
 }
 
-[data-skate=crossfade].skate.skate-no-js > .skate-target,
-[data-skate=crossfade].skate.skate-no-js > :target {
+[data-skate=crossfade].skate.skate-css > .skate-target,
+[data-skate=crossfade].skate.skate-css > :target {
 	opacity: 1;
 	z-index: 2;
 }
@@ -134,7 +134,7 @@ CROSSFADE
 SLIDE
 
 **/
-[data-skate=slide].skate.skate-no-js > * {
+[data-skate=slide].skate.skate-css > * {
 	opacity: 1;
 	-webkit-transform: translateX(-100%);
 	-moz-transform: translateX(-100%);
@@ -144,9 +144,9 @@ SLIDE
 	transition: transform .5s ease-in 0s, visibility 0s ease .5s;
 }
 
-[data-skate=slide].skate.skate-no-js > *.skate-target,
-[data-skate=slide].skate.skate-no-js > *:last-child,
-[data-skate=slide].skate.skate-no-js > *:target {
+[data-skate=slide].skate.skate-css > *.skate-target,
+[data-skate=slide].skate.skate-css > *:last-child,
+[data-skate=slide].skate.skate-css > *:target {
 	opacity: 1;
 	-webkit-transform: translateX(0);
 	-moz-transform: translateX(0);
@@ -156,10 +156,10 @@ SLIDE
 	transition: -webkit-transform .5s ease-in, visibility 0s ease;
 }
 
-[data-skate=slide].skate.skate-no-js > .skate-target ~ *,
-[data-skate=slide].skate.skate-no-js > .skate-target ~ *:last-child,
-[data-skate=slide].skate.skate-no-js > :target ~ *,
-[data-skate=slide].skate.skate-no-js > :target ~ *:last-child {
+[data-skate=slide].skate.skate-css > .skate-target ~ *,
+[data-skate=slide].skate.skate-css > .skate-target ~ *:last-child,
+[data-skate=slide].skate.skate-css > :target ~ *,
+[data-skate=slide].skate.skate-css > :target ~ *:last-child {
 	left: -200%;
 	-webkit-transform: translateX(100%);
 	-moz-transform: translateX(100%);
@@ -179,9 +179,9 @@ CARDS
 
 **/
 
-[data-skate=cards].skate.skate-no-js > .skate-target ~ :last-child,
-[data-skate=cards].skate > *,
-[data-skate=cards].skate.skate-no-js > :target ~ :last-child {
+[data-skate=cards].skate.skate-css > .skate-target ~ :last-child,
+[data-skate=cards].skate.skate-css > *,
+[data-skate=cards].skate.skate-css > :target ~ :last-child {
 	-webkit-transform: translateY(120%) rotate(5deg);
 	-moz-transform: translateY(120%) rotate(5deg);
 	transform: translateY(120%) rotate(5deg);
@@ -191,21 +191,21 @@ CARDS
 	transition: transform .5s ease-in, z-index 0s ease .5s;
 }
 
-[data-skate=cards].skate > *:nth-child(even) {
+[data-skate=cards].skate.skate-css > *:nth-child(even) {
 	-webkit-transform: translateY(120%) rotate(-5deg);
 	-moz-transform: translateY(120%) rotate(-5deg);
 	transform: translateY(120%) rotate(-5deg);
 }
 
-[data-skate=cards].skate.skate-no-js > * {
+[data-skate=cards].skate.skate-css > * {
 	-webkit-transition: -webkit-transform .5s ease-in 0s, z-index 0s ease .5s;
 	-moz-transition: -moz-transform .5s ease-in 0s, z-index 0s ease .5s;
 	transition: transform .5s ease-in 0s, z-index 0s ease .5s;
 }
 
-[data-skate=cards].skate.skate-no-js > .skate-target,
-[data-skate=cards].skate.skate-no-js > :last-child,
-[data-skate=cards].skate.skate-no-js > :target {
+[data-skate=cards].skate.skate-css > .skate-target,
+[data-skate=cards].skate.skate-css > :last-child,
+[data-skate=cards].skate.skate-css > :target {
 	-webkit-transform: translateY(0);
 	-moz-transform: translateY(0);
 	transform: translateY(0);
