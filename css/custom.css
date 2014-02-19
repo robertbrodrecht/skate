@@ -1,0 +1,206 @@
+/* Fake Reset. */
+* {
+	margin: 0px;
+	padding: 0px;
+}
+
+*, *:before, *:after {
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+body {
+	background: #EFEFEF;
+}
+
+body > div {
+	padding: 20px;
+}
+
+.desc {
+	background: #FFF;
+	border-top: 5px solid gray;
+	margin-top: 20px;
+	padding: 20px;
+}
+
+
+
+
+/* Required to set a height and width. */
+.my-skate-container .skate {
+	height: 500px;
+	width: 100%;
+}
+
+
+/* Custom classes to make it all look right. */
+.my-skate-container {
+	margin-bottom: 20px;
+}
+
+.my-skate-container .skate {
+	background: #000;
+}
+
+.my-skate-container > ul > li > a {
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+.my-skate-container > ul > li > div,
+.my-skate-container > ul > li > a > div {
+	display: table;
+	color: rgb(243, 236, 220);
+	height: 100%;
+	line-height: 1;
+	text-align: center;
+	text-shadow: 0px 0px 10px #000;
+	width: 100%;
+}
+
+.my-skate-container > ul > li > div > div,
+.my-skate-container > ul > li > a > div > div {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.my-skate-container > ul > li > a > div > div,
+.my-skate-container > ul > li > div > div {
+	padding: 0px 30px;
+}
+
+.my-skate-container > ul > li > div h1,
+.my-skate-container > ul > li > a > div h1 {
+	font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+	font-size: 20px;
+	text-transform: uppercase;
+}
+
+.my-skate-container > ul > li > div p,
+.my-skate-container > ul > li > a > div p {
+	font-family: Garamond, Baskerville, "Baskerville Old Face", "Hoefler Text", "Times New Roman", serif;
+	font-size: 60px;
+	font-weight: bold;
+}
+
+.my-skate-container > ul > li > div p+p,
+.my-skate-container > ul > li > a > div p+p {
+	background: black;
+	display: inline-block;
+	font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+	font-size: 14px;
+	margin-top: 20px;
+	padding: 20px 30px;
+	text-transform: uppercase;
+} 
+
+.my-skate-container > ul > li:first-child > a > div,
+.my-skate-container > ul > li:first-child > div {
+	background: #000 url(../images/slide1.jpg) center;
+	background-size: cover;
+}
+
+.my-skate-container > ul > li:first-child + li > div ,
+.my-skate-container > ul > li:first-child + li > a > div {
+	background: #000 url(../images/slide2.jpg) center;
+	background-size: cover;
+}
+
+.my-skate-container > ul > li:first-child + li + li > div,
+.my-skate-container > ul > li:first-child + li + li > a > div {
+	background: #000 url(../images/slide3.jpg) center;
+	background-size: cover;
+}
+
+.my-skate-container > ul > li:first-child + li + li + li > div,
+.my-skate-container > ul > li:first-child + li + li + li > a > div {
+	background: #000 url(../images/slide4.jpg) center;
+	background-size: cover;
+}
+
+.my-skate-container > ul > li:first-child + li + li + li + li > div,
+.my-skate-container > ul > li:first-child + li + li + li + li > a > div {
+	background: #000 url(../images/slide5.jpg) center;
+	background-size: cover;
+}
+
+.my-skate-container nav a {
+	color: rgb(243, 236, 220);
+	font-size: 80px;
+	text-decoration: none;
+}
+
+.my-skate-container .skate-slide-navigation {
+	bottom: 1em;
+	left: 0;
+	text-align: center;
+	width: 100%;
+}
+
+
+.my-skate-container .skate-slide-navigation li a {
+	font-size: 20px;
+	opacity: .5;
+}
+
+nav {
+	text-shadow: 0px 0px 10px #000;
+}
+
+/* Customized Transitions */
+
+
+.my-skate-container .skate.skate-no-js > .skate-target ~ :last-child div div,
+.my-skate-container .skate.skate-no-js > :target ~ :last-child div div,
+.my-skate-container .skate.skate-no-js > * div div {
+	opacity: 0;
+	-webkit-transform: translateY(-500px);
+	-moz-transform: translateY(-500px);
+	transform: translateY(-500px);
+	-webkit-transition: opacity 1s ease, -webkit-transform 1s ease;
+	-moz-transition: opacity 1s ease, -moz-transform 1s ease;
+	transition: opacity 1s ease, transform 1s ease;
+	z-index: 1;
+}
+
+.my-skate-container .skate.skate-no-js > :last-child div div {
+	opacity: 1;
+	-webkit-transform: translateY(0);
+	-moz-transform: translateY(0);
+	transform: translateY(0);
+	z-index: 2;
+}
+
+.my-skate-container .skate.skate-no-js > .skate-target div div,
+.my-skate-container .skate.skate-no-js > :target div div {
+	opacity: 1;
+	-webkit-transform: translateY(0);
+	-moz-transform: translateY(0);
+	transform: translateY(0);
+	z-index: 3;
+}
+
+
+
+body > div > section {
+	display: none;
+}
+
+body > div > section.no-animation {
+	display: block;
+}
+
+body > div > section.crossfade-animation {
+	display: block;
+}
+
+body > div > section.slide-animation {
+	display: block;
+}
+
+body > div > section.cards-animation {
+	display: block;
+}

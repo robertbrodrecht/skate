@@ -1,0 +1,1 @@
+$('.skate').skate({debug: true});
