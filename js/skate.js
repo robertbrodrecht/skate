@@ -51,9 +51,16 @@ $.fn.skate = function(settings) {
 		return previous;
 	}
 	
+	// Set next and previous based on current.
 	function setNextPreviousFromCurrent() {
 		me.slides.next = getNextSlide(me.slides.current);
 		me.slides.previous = getPreviousSlide(me.slides.current);
+	}
+	
+	// Remove target classes and add to the current.
+	function setCurrentClass() {
+		me.slides.all.removeClass('skate-target');
+		me.slides.current.addClass('skate-target');
 	}
 	
 	// Validate animation type.  Set a default if invalid.
@@ -63,32 +70,38 @@ $.fn.skate = function(settings) {
 				console.log('Invalid animation type.  Using crossfade.');
 			}
 			options.animation = 'crossfade';
-		break;
 		case 'crossfade':
+		break;
 		case 'slide':
-		case 'card':
+		break;
+		case 'cards':
 		break;
 	}
 	
+	me.attr('data-skate', options.animation);
+	
+	// Handle clicks to nav things.
 	me.on(
 		'click',
 		function(e) {
 			var el = $(e.target),
 				target = $(el.attr('href'));
+				
+			// If there is a target and the target is a slide...
 			if(target.length && me.slides.all.filter(target).length) {
 				e.preventDefault();
-				me.slides.all.removeClass('skate-target');
-				target.addClass('skate-target');
+				me.slides.current = target;
+				setNextPreviousFromCurrent();
+				setCurrentClass();
 			}
 		}
 	);
 	
 	me.slides.all = me.find(options.slides);
 	me.slides.current = me.slides.all.filter(options.first);
-	
-	me.slides.current.addClass('skate-target');
-	
+		
 	setNextPreviousFromCurrent();
+	setCurrentClass();
 	
 	//console.log(me.slides.all, me.slides.next, me.slides.previous, me.slides.current);
 	
@@ -98,7 +111,7 @@ $.fn.skate = function(settings) {
 
 $.fn.skate.defaults = {
 	'debug': false,				// Whether to show debug messages.
-	'animation': 'crossfade', 	// Animation types: slide, card, crossfade.
+	'animation': 'crossfade', 	// Animation types: slide, cards, crossfade.
 	'delay': 5,					// How long to show a single slide.
 	'transition': .5,			// How long it should take to transition between slides.
 	'slides': '> *',			// Query to get slide elements relative to container.
