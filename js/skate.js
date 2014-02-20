@@ -152,8 +152,6 @@ $.fn.skate = function(settings) {
 			case 'crossfade':
 				$(this).css(
 					{
-						'-webkit-transition': 'opacity ' + options.transition + 's ease',
-						'-moz-transition': 'opacity ' + options.transition + 's ease',
 						'transition': 'opacity ' + options.transition + 's ease'
 					}
 				);
@@ -162,10 +160,6 @@ $.fn.skate = function(settings) {
 				if(isCurrent) {
 					$(this).css(
 						{
-							'-webkit-transition': '-webkit-transform ' + 
-								options.transition + 's ease-in, visibility 0s ease',
-							'-moz-transition': '-moz-transform ' + 
-								options.transition + 's ease-in, visibility 0s ease',
 							'transition': 'transform ' + 
 								options.transition + 's ease-in, visibility 0s ease'
 						}
@@ -173,13 +167,6 @@ $.fn.skate = function(settings) {
 				} else if(foundCurrent) {
 					$(this).css(
 						{
-							'-webkit-transition': '-webkit-transform ' + 
-								options.transition + 's ease-in, visibility 0s ease ' + 
-								options.transition + 's, left 0s ease ' + 
-								options.transition + 's',
-							'-moz-transition': '-moz-transform ' + options.transition + 
-								's ease-in, visibility 0s ease ' + options.transition + 
-								's, left 0s ease ' + options.transition + 's',
 							'transition': 'transform ' + options.transition + 
 								's ease-in, visibility 0s ease ' + options.transition + 
 								's, left 0s ease ' + options.transition + 's',
@@ -188,12 +175,6 @@ $.fn.skate = function(settings) {
 				} else {
 					$(this).css(
 						{
-							'-webkit-transition': '-webkit-transform ' + options.transition + 
-								's ease-in 0s, visibility 0s ease ' + 
-								options.transition + 's',
-							'-moz-transition': '-moz-transform ' + options.transition + 
-								's ease-in 0s, visibility 0s ease ' + 
-								options.transition + 's',
 							'transition': 'transform ' + options.transition + 
 								's ease-in 0s, visibility 0s ease ' + 
 								options.transition + 's'
@@ -432,6 +413,99 @@ $.fn.skate = function(settings) {
 		).data('skate-key-event-attached', me);
 	}
 	
+	if(1===2 && options.touch) {
+		// Doesn't work right.  Trying to reconcile JS only and CSS.
+		// Maybe this shouldn't work without CSS support.
+		jqme.on(
+			'touchstart',
+			function(e) {
+				e.preventDefault();
+				jqme.data('touchstart', e.originalEvent.touches[0].pageX);
+				jqme.data('had-skate-css-class', jqme.hasClass('skate-css'));
+				jqme.data('animation-type', jqme.attr('data-skate'));
+			}
+		).on(
+			'touchmove',
+			function(e) {
+				var touchstart = jqme.data('touchstart'),
+					touchnow = e.originalEvent.touches[0].pageX,
+					enableBackSettings = {
+							'transition': 'none', 
+							'transform': 'none', 
+							'left': 0, 
+							'top': 0,
+							'opacity': 1
+						},
+					disableBackSettings = {
+							'transition': '', 
+							'transform': '', 
+							'left': '', 
+							'top': '',
+							'opacity': 0
+						};
+				e.preventDefault();
+				jqme.data('touchlast', touchnow);
+				
+				jqme.removeClass('skate-css');
+				jqme.attr('data-skate', 'none');
+				
+	 			if(touchnow-touchstart > 0) {
+ 					me.slides.all.css(disableBackSettings);
+ 					me.slides.next.css(enableBackSettings);
+ 				} else {
+ 					me.slides.all.css(disableBackSettings);
+ 					me.slides.previous.css(enableBackSettings);
+ 				}
+				me.slides.current.css(
+					{
+						'transition': 'none', 
+						'transform': 'translateX(' + (touchnow-touchstart) + 'px)',
+						'left': 0, 
+						'top': 0,
+						'opacity': 1
+					}
+				);
+			}
+		).on(
+			'touchend',
+			function(e) {
+				var translate = 'translateX(0)',
+					touchnow = jqme.data('touchlast'),
+					touchstart = jqme.data('touchstart'),
+					wascurrent = me.slides.current;
+				if(!touchnow) {
+					me.slides.current.children('a').trigger('click');
+				} else {
+					wascurrent.css('transition', 'transform .1s ease-in');
+					if(touchnow-touchstart > 0) {
+						translate = 'translateX(-100%)';
+						me.slides.current = getNextSlide();
+					} else if(touchnow-touchstart < 0) {
+						translate = 'translateX(100%)';
+						me.slides.current = getPreviousSlide();
+					} else {
+						
+					}
+					wascurrent.one(
+							'transitionEnd',
+							function() {
+								me.slides.all.css('');
+								if(jqme.data('had-skate-css-class')) {
+									jqme.addClass('skate-css');
+								}
+								jqme.attr('data-skate', jqme.data('animation-type'));
+								setNextPreviousFromCurrent();
+								setCurrentClass();
+							}
+						).css('transform', translate);
+				}
+				jqme.data('touchstart', '');
+				jqme.data('had-skate-css-class', '');
+				jqme.data('animation-type', '');
+			}
+		);
+	}
+	
 	// Set the initial slides.
 	me.slides.all = me.find(options.slides);
 	me.slides.current = me.slides.all.filter(options.first);
@@ -471,6 +545,7 @@ $.fn.skate.defaults = {
 	'first': ':first-child',	// Filter slides and use this as the first slide.
 	'css': true,				// Whether to use CSS3 transitions when available.
 	'keyboard': true,			// Whether this slider has keyboard control capability.
+	'touch': true,				// Whether this slider has touch control capability.
 	'heightmatch': true			// Whether to resize the container to fit the slide.
 };
 
