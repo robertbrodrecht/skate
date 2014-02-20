@@ -345,15 +345,20 @@ $.fn.skate = function(settings) {
 				clearInterval(me.interval);
 			}
 		}
-	).on(
-		'mouseover',
-		function() {
-			me.setKeyboardFocus();
-		}
 	);
 	
+	// Enable the slideshow to steal keyboard controls on hover.
+	if(options.keyboard) {
+		me.parent().on(
+			'mouseover',
+			function() {
+				me.setKeyboardFocus();
+			}
+		);
+	}
+	
 	// Attach keyboard controls to the first skate instance.
-	if(!body.data('skate-key-event-attached')) {
+	if(!body.data('skate-key-event-attached') && options.keyboard) {
 		body.on(
 			'keyup',
 			function(e) {
@@ -405,7 +410,8 @@ $.fn.skate.defaults = {
 	'transition': .5,			// How long it should take to transition between slides.
 	'slides': '> *',			// Query to get slide elements relative to container.
 	'first': ':first-child',	// Filter slides and use this as the first slide.
-	'css': true					// Whether to use CSS3 transitions when available.
+	'css': true,				// Whether to use CSS3 transitions when available.
+	'keyboard': true			// Whether this slider has keyboard control capability
 };
 
 }( jQuery ));
