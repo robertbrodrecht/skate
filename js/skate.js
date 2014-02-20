@@ -87,14 +87,37 @@ $.fn.skate = function(settings) {
 	
 	// Remove target classes and add to the current.
 	function setCurrentClass() {
-		var foundCurrent = false;
+		var foundCurrent = false,
+			animationName = options.animation;
+		
+		// Prep the animation name for firing custom events.
+		animationName = animationName.charAt(0).toUpperCase() + animationName.slice(1);
+		
+		// Fire start events.
+		jqme.trigger('skateTransitionStart');
+		jqme.trigger('skate' + animationName + 'TransitionStart');
+		
 		// If we can use CSS to handle the swap, use CSS.
 		if(options.css || options.animation === 'none') {
 			if(options.css) {
 				me.slides.all.each(updateCSSTransitions);
 			}
 			me.slides.all.removeClass('skate-target');
-			me.slides.current.addClass('skate-target');
+			me.slides.current
+				.one(
+					'webkitTransitionEnd MozTransitionEnd transitionEnd', 
+					function() {
+						// Fire the events at the end of the transition.
+						jqme.trigger('skateTransitionEnd');
+						jqme.trigger('skate' + animationName + 'TransitionEnd');
+					}
+				).addClass('skate-target');
+			
+			// If we aren't doing an animation, there fire end events manually.
+			if(options.animation === 'none') {
+				jqme.trigger('skateTransitionEnd');
+				jqme.trigger('skateNoneTransitionEnd');
+			}
 		// Otherwise, animate it with jQuery.
 		} else {
 			me.slides.all.each(handleAnimation);
@@ -111,6 +134,7 @@ $.fn.skate = function(settings) {
 			foundCurrent = true;
 		}
 		
+		// Update the CSS.
 		switch(options.animation) {
 			case 'crossfade':
 				$(this).css(
@@ -189,6 +213,8 @@ $.fn.skate = function(settings) {
 							'linear',
 							function() {
 								$(this).addClass('skate-target');
+								jqme.trigger('skateTransitionEnd');
+								jqme.trigger('skateCrossfadeTransitionEnd');
 							}
 						);
 				// If not, fade it out and change the class.
@@ -212,6 +238,8 @@ $.fn.skate = function(settings) {
 							'linear',
 							function() {
 								$(this).addClass('skate-target');
+								jqme.trigger('skateTransitionEnd');
+								jqme.trigger('skateSlideTransitionEnd');
 							}
 						);
 				// If not, figure out how to handle the slide.
@@ -246,7 +274,13 @@ $.fn.skate = function(settings) {
 				// If the slide is the new current slide, put it in place.
 				if(isCurrent) {
 					el.css('top', 0).addClass('skate-target');
-					
+					setTimeout(
+						function() {
+							jqme.trigger('skateTransitionEnd');
+							jqme.trigger('skateCardsTransitionEnd');
+						},
+						options.transition * 1000
+					);
 				// Otherwise, animate the slide out of view.
 				} else {
 					el.css('z-index', 4).animate(
@@ -398,8 +432,14 @@ $.fn.skate = function(settings) {
 		me.interval = setInterval(autoplayNext, options.delay * 1000);
 	}
 	
+	setTimeout(
+		function() {
+			jqme.trigger('skateReady');
+		}, 1
+	);
+	
 	// Return the modified element.
-	return me;
+	return this;
 };
 
 $.fn.skate.defaults = {

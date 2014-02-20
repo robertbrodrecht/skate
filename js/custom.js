@@ -7,3 +7,16 @@ $('.cards-animation .skate').skate({debug: true, animation: 'cards', 'css': loca
 $('.no-animation > h1').html($('.no-animation > h1').html() + ' (Keyboard Controls Disabled)');
 $('.crossfade-animation > h1').html($('.crossfade-animation > h1').html() + ' (Keyboard Attached Here By Default)');
 cfskate.setKeyboardFocus();
+
+
+
+$(document.body).on(
+	'skateReady skateTransitionStart skateTransitionEnd' +
+		' skateNoneTransitionStart skateNoneTransitionEnd' +
+		' skateCrossfadeTransitionStart skateCrossfadeTransitionEnd' +
+		' skateSlideTransitionStart skateSlideTransitionEnd' +
+		' skateCardsTransitionStart skateCardsTransitionEnd' ,
+	function(e) {
+		console.log('Skate Event Fired:', e.type);
+	}
+);

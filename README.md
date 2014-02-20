@@ -14,12 +14,12 @@ Features:
 * Any content can be in a slide.
 * Setting for autoplay.
 * Transition speed and slide delay settings applied to both JS animations and CSS transitions.
+* Custom events: skateReady, skateTransitionStart, skateTransitionEnd, skateNoneTransitionStart, skateNoneTransitionEnd, skateCrossfadeTransitionStart, skateCrossfadeTransitionEnd, skateSlideTransitionStart, skateSlideTransitionEnd, skateCardsTransitionStart, skateCardsTransitionEnd
 
 Features to implement:
 * Controls via touch.
 * Progress bar for current slide duration.
 * Classes change to indicate current behavior.
-* Custom events.
 * Selector settings for tweaking default elements. (Needs testing; JS Feature)
 * Setting to adjust slide container height for dealing with multiple height slides within one deck. (JS Feature)
 
