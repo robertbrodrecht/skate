@@ -3,7 +3,7 @@ Skate
 
 Skate is a CSS-based and jQuery extended slide carrousel / image rotator / whatever-you-call-it.
 
-*Skate is a work in progress!* I'm playing with this in my free time.  While you can probably make use of the work up to this point, you may want to hold off doing anything until this message is gone.
+*Skate is a work in progress!* I'm playing with this in my free time.  While you can probably make use of the work up to this point, you may want to hold off doing anything production related with this code until this message is gone.
 
 Features:
 * Responsive.
@@ -14,15 +14,19 @@ Features:
 * Any content can be in a slide.
 * Setting for autoplay.
 * Transition speed and slide delay settings applied to both JS animations and CSS transitions.
-* Custom events: skateReady, skateTransitionStart, skateTransitionEnd, skateNoneTransitionStart, skateNoneTransitionEnd, skateCrossfadeTransitionStart, skateCrossfadeTransitionEnd, skateSlideTransitionStart, skateSlideTransitionEnd, skateCardsTransitionStart, skateCardsTransitionEnd
+* Setting to adjust slide container height for dealing with multiple height slides within one deck. (JS Feature)
+* Custom events: skateReady, skateContainerHeightAdjustStart, skateContainerHeightAdjustEnd, skateTransitionStart, skateTransitionEnd, skateNoneTransitionStart, skateNoneTransitionEnd, skateCrossfadeTransitionStart, skateCrossfadeTransitionEnd, skateSlideTransitionStart, skateSlideTransitionEnd, skateCardsTransitionStart, skateCardsTransitionEnd
 
-Features to implement:
+Features to implement in no particular order:
 * Controls via touch.
 * Progress bar for current slide duration.
 * Classes change to indicate current behavior.
 * Selector settings for tweaking default elements. (Needs testing; JS Feature)
-* Setting to adjust slide container height for dealing with multiple height slides within one deck. (JS Feature)
+* Create navigation in JS or reuse CSS navigation elements.
 
-Other hopes and dreams:
+Features under consideration:
+* Ajax load additional slides.
+
+Other hopes and dreams that are at the very bottom of the priority list:
 * Solve the Montevallo problem if possible.
 * Custom namespaces.

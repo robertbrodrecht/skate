@@ -122,6 +122,19 @@ $.fn.skate = function(settings) {
 		} else {
 			me.slides.all.each(handleAnimation);
 		}
+		
+		// Animate the height of the container if needed.
+		if(options.heightmatch && 
+			me.slides.current.outerHeight() !== jqme.outerHeight()
+		) {
+			jqme.trigger('skateContainerHeightAdjustStart');
+			jqme.animate(
+					{'height': me.slides.current.outerHeight() + 'px'},
+					function() {
+						jqme.trigger('skateContainerHeightAdjustEnd');
+					}
+				);
+		}
 	}
 	
 	// Update CSS transitions to respect JS settings.
@@ -343,6 +356,11 @@ $.fn.skate = function(settings) {
 		me.addClass('skate-css');
 	}
 	
+	// Use the data attribute if the settings didn't specify one.
+	if((!settings || !settings.hasOwnProperty('animation')) && jqme.data('skate')) {
+		options.animation = jqme.data('skate');
+	}
+	
 	// Validate animation type.  Set a default if invalid.
 	switch(options.animation){
 		default:
@@ -432,6 +450,7 @@ $.fn.skate = function(settings) {
 		me.interval = setInterval(autoplayNext, options.delay * 1000);
 	}
 	
+	// Fire the skateReady event.  For some reason, jQuery needs it to be in a setTimeout.
 	setTimeout(
 		function() {
 			jqme.trigger('skateReady');
@@ -451,7 +470,8 @@ $.fn.skate.defaults = {
 	'slides': '> *',			// Query to get slide elements relative to container.
 	'first': ':first-child',	// Filter slides and use this as the first slide.
 	'css': true,				// Whether to use CSS3 transitions when available.
-	'keyboard': true			// Whether this slider has keyboard control capability
+	'keyboard': true,			// Whether this slider has keyboard control capability.
+	'heightmatch': true			// Whether to resize the container to fit the slide.
 };
 
 }( jQuery ));

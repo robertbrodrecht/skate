@@ -1,7 +1,11 @@
-$('.no-animation .skate').skate({debug: true, animation: 'none', 'css': location.href.indexOf('js-only') > -1 ? false : true, 'keyboard': false});
-cfskate = $('.crossfade-animation .skate').skate({debug: true, animation: 'crossfade', 'css': location.href.indexOf('js-only') > -1 ? false : true});
-$('.slide-animation .skate').skate({debug: true, animation: 'slide', 'css': location.href.indexOf('js-only') > -1 ? false : true});
-$('.cards-animation .skate').skate({debug: true, animation: 'cards', 'css': location.href.indexOf('js-only') > -1 ? false : true});
+$.fn.skate.defaults.autoplay = false;
+$.fn.skate.defaults.debug = true;
+$.fn.skate.defaults.css = location.href.indexOf('js-only') > -1 ? false : true;
+
+$('.no-animation .skate').skate({animation: 'none', 'keyboard': false});
+cfskate = $('.crossfade-animation .skate').skate({animation: 'crossfade'});
+$('.slide-animation .skate').skate();
+$('.cards-animation .skate').skate();
 
 
 $('.no-animation > h1').html($('.no-animation > h1').html() + ' (Keyboard Controls Disabled)');
@@ -17,6 +21,6 @@ $(document.body).on(
 		' skateSlideTransitionStart skateSlideTransitionEnd' +
 		' skateCardsTransitionStart skateCardsTransitionEnd' ,
 	function(e) {
-		console.log('Skate Event Fired:', e.type);
+		//console.log('Skate Event Fired:', e.type);
 	}
 );

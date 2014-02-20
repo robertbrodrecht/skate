@@ -36,6 +36,7 @@ body > div {
 
 
 /* Custom classes to make it all look right. */
+
 .my-skate-container {
 	margin-bottom: 20px;
 }
@@ -203,4 +204,11 @@ body > div > section.slide-animation {
 
 body > div > section.cards-animation {
 	display: block;
+}
+
+.my-skate-container .skate > * {
+	height: 500px;
+}
+.my-skate-container .skate > *:nth-child(even) {
+	height: 550px;
 }
