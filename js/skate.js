@@ -118,6 +118,7 @@ $.fn.skate = function(settings) {
 				jqme.trigger('skateTransitionEnd');
 				jqme.trigger('skateNoneTransitionEnd');
 			}
+			
 		// Otherwise, animate it with jQuery.
 		} else {
 			me.slides.all.each(handleAnimation);
@@ -130,6 +131,7 @@ $.fn.skate = function(settings) {
 			jqme.trigger('skateContainerHeightAdjustStart');
 			jqme.animate(
 					{'height': me.slides.current.outerHeight() + 'px'},
+					400,
 					function() {
 						jqme.trigger('skateContainerHeightAdjustEnd');
 					}
@@ -152,6 +154,8 @@ $.fn.skate = function(settings) {
 			case 'crossfade':
 				$(this).css(
 					{
+						'-webkit-transition': 'opacity ' + options.transition + 's ease',
+						'-moz-transition': 'opacity ' + options.transition + 's ease',
 						'transition': 'opacity ' + options.transition + 's ease'
 					}
 				);
@@ -160,6 +164,10 @@ $.fn.skate = function(settings) {
 				if(isCurrent) {
 					$(this).css(
 						{
+							'-webkit-transition': '-webkit-transform ' + 
+								options.transition + 's ease-in, visibility 0s ease',
+							'-moz-transition': '-moz-transform ' + 
+								options.transition + 's ease-in, visibility 0s ease',
 							'transition': 'transform ' + 
 								options.transition + 's ease-in, visibility 0s ease'
 						}
@@ -167,14 +175,27 @@ $.fn.skate = function(settings) {
 				} else if(foundCurrent) {
 					$(this).css(
 						{
-							'transition': 'transform ' + options.transition + 
+							'-webkit-transition': '-webkit-transform ' + 
+								options.transition + 's ease-in, visibility 0s ease ' + 
+								options.transition + 's, left 0s ease ' + 
+								options.transition + 's',
+							'-moz-transition': '-moz-transform ' + options.transition + 
 								's ease-in, visibility 0s ease ' + options.transition + 
 								's, left 0s ease ' + options.transition + 's',
+							'transition': 'transform ' + options.transition + 
+								's ease-in, visibility 0s ease ' + options.transition + 
+								's, left 0s ease ' + options.transition + 's'
 						}
 					);
 				} else {
 					$(this).css(
 						{
+							'-webkit-transition': '-webkit-transform ' + 
+								options.transition + 's ease-in 0s, visibility 0s ease ' + 
+								options.transition + 's',
+							'-moz-transition': '-moz-transform ' + options.transition + 
+								's ease-in 0s, visibility 0s ease ' + 
+								options.transition + 's',
 							'transition': 'transform ' + options.transition + 
 								's ease-in 0s, visibility 0s ease ' + 
 								options.transition + 's'
@@ -413,12 +434,17 @@ $.fn.skate = function(settings) {
 		).data('skate-key-event-attached', me);
 	}
 	
-	if(1===2 && options.touch) {
-		// Doesn't work right.  Trying to reconcile JS only and CSS.
-		// Maybe this shouldn't work without CSS support.
+	// If CSS and Touch, we need to set events for handling swipes.
+	if(options.css && options.touch) {
 		jqme.on(
 			'touchstart',
 			function(e) {
+				// If the user is hitting navigation, ignore all of this.
+				if($(e.target).is('.skate-slide-navigation *, .skate-next-prev *')) {
+					return;
+				}
+				
+				// Otherwise, set the introductory touch and prep to disable CSS.
 				e.preventDefault();
 				jqme.data('touchstart', e.originalEvent.touches[0].pageX);
 				jqme.data('had-skate-css-class', jqme.hasClass('skate-css'));
@@ -434,37 +460,42 @@ $.fn.skate = function(settings) {
 							'transform': 'none', 
 							'left': 0, 
 							'top': 0,
-							'opacity': 1
+							'opacity': 1,
+							'visibility': 'visible',
+							'display': 'block'
 						},
-					disableBackSettings = {
-							'transition': '', 
-							'transform': '', 
-							'left': '', 
-							'top': '',
-							'opacity': 0
-						};
-				e.preventDefault();
-				jqme.data('touchlast', touchnow);
-				
-				jqme.removeClass('skate-css');
-				jqme.attr('data-skate', 'none');
-				
-	 			if(touchnow-touchstart > 0) {
- 					me.slides.all.css(disableBackSettings);
- 					me.slides.next.css(enableBackSettings);
- 				} else {
- 					me.slides.all.css(disableBackSettings);
- 					me.slides.previous.css(enableBackSettings);
- 				}
-				me.slides.current.css(
-					{
+					currentSlideSettings = {
 						'transition': 'none', 
 						'transform': 'translateX(' + (touchnow-touchstart) + 'px)',
 						'left': 0, 
 						'top': 0,
-						'opacity': 1
-					}
-				);
+						'opacity': 1,
+						'display': 'block'
+					};
+					
+				// If the user is hitting navigation, ignore all of this.
+				if($(e.target).is('.skate-slide-navigation *, .skate-next-prev *')) {
+					return;
+				}
+				
+				jqme.data('touchlast', touchnow);
+			
+				// The user is trying to swipe, so disable CSS support temporarily.
+				jqme.removeClass('skate-css');
+				jqme.attr('data-skate', 'none');
+				
+				// Remove all styles and hide all slides.
+				me.slides.all.removeAttr('style').css('display', 'none');
+				
+				// Depending on the direction, show the correct "background" slide.
+				if(touchnow-touchstart < 0) {
+					me.slides.next.css(enableBackSettings);
+				} else {
+					me.slides.previous.css(enableBackSettings);
+				}
+				
+				// Make sure the current slide is visible.
+				me.slides.current.css(currentSlideSettings);
 			}
 		).on(
 			'touchend',
@@ -473,37 +504,74 @@ $.fn.skate = function(settings) {
 					touchnow = jqme.data('touchlast'),
 					touchstart = jqme.data('touchstart'),
 					wascurrent = me.slides.current;
+					
+				// If the user is hitting navigation, ignore all of this.
+				if($(e.target).is('.skate-slide-navigation *, .skate-next-prev *')) {
+					return;
+				}
+				
+				// If the user just tapped, there won't be any last-touch data.
 				if(!touchnow) {
-					me.slides.current.children('a').trigger('click');
+					// If the target is an anchor, click it.
+					if($(e.target).is('a')) {
+						$(e.target).is('a').trigger('click');
+						
+					// If not, find something to click.
+					} else if(me.slides.current.children('a').length) {
+						me.slides.current.children('a').trigger('click');
+					}
+				
+				// The user has swiped, so we need to figure out what to do.
 				} else {
-					wascurrent.css('transition', 'transform .1s ease-in');
-					if(touchnow-touchstart > 0) {
+					// Set the transitions for the old current to animate out.
+					wascurrent.css(
+							{
+								'-webkit-transition': '-webkit-transform .1s ease-in',
+								'-moz-transition': '-webkit-transform .1s ease-in',
+								'transition': 'transform .1s ease-in'
+							}
+						);
+						
+					// Set where the old current will animate to and prep the new current.
+					if(touchnow-touchstart < -20) {
 						translate = 'translateX(-100%)';
 						me.slides.current = getNextSlide();
-					} else if(touchnow-touchstart < 0) {
+					} else if(touchnow-touchstart > 20) {
 						translate = 'translateX(100%)';
 						me.slides.current = getPreviousSlide();
-					} else {
-						
 					}
+					
+					// Set a transition end and animate out.
 					wascurrent.one(
-							'transitionEnd',
+							'webkitTransitionEnd MozTransitionEnd transitionEnd',
 							function() {
-								me.slides.all.css('');
+								// Clear all styles from slides.
+								me.slides.all.removeAttr('style');
+								
+								// Add back CSS support if it was there.
 								if(jqme.data('had-skate-css-class')) {
 									jqme.addClass('skate-css');
 								}
-								jqme.attr('data-skate', jqme.data('animation-type'));
+								
+								// Set next and previous, and set the current class.
 								setNextPreviousFromCurrent();
 								setCurrentClass();
+								
+								// Reset the animation.
+								jqme.attr('data-skate', jqme.data('animation-type'));
+								
+								// Clear data from the gesture.
+								jqme.data('touchstart', '');
+								jqme.data('touchlast', '');
+								jqme.data('had-skate-css-class', '');
+								jqme.data('animation-type', '');
 							}
 						).css('transform', translate);
 				}
-				jqme.data('touchstart', '');
-				jqme.data('had-skate-css-class', '');
-				jqme.data('animation-type', '');
 			}
 		);
+	} else if(options.touch && debug) {
+		console.log('CSS support must be enabled to use touch controls.');
 	}
 	
 	// Set the initial slides.

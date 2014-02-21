@@ -11,6 +11,7 @@ Features:
 * Great CSS-only fallbacks.
 * Controls via mouse (i.e. next and previous buttons, and slide navigation).
 * Controls via keyboard with left and right arrows. Interaction steals keyboard focus (e.g. hover, click);
+* Controls via touch (i.e. swipe right and left, see know bugs).
 * Any content can be in a slide.
 * Setting for autoplay.
 * Transition speed and slide delay settings applied to both JS animations and CSS transitions.
@@ -18,7 +19,6 @@ Features:
 * Custom events: skateReady, skateContainerHeightAdjustStart, skateContainerHeightAdjustEnd, skateTransitionStart, skateTransitionEnd, skateNoneTransitionStart, skateNoneTransitionEnd, skateCrossfadeTransitionStart, skateCrossfadeTransitionEnd, skateSlideTransitionStart, skateSlideTransitionEnd, skateCardsTransitionStart, skateCardsTransitionEnd
 
 Features to implement in no particular order:
-* Controls via touch.
 * Progress bar for current slide duration.
 * Classes change to indicate current behavior.
 * Selector settings for tweaking default elements. (Needs testing; JS Feature)
@@ -30,3 +30,6 @@ Features under consideration:
 Other hopes and dreams that are at the very bottom of the priority list:
 * Solve the Montevallo problem if possible.
 * Custom namespaces.
+
+Know Bugs:
+* When using swipe touch controls with height match going from a taller slide to a shorter slide, not-active slides can be seen in the background during height animation.

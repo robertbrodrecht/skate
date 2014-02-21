@@ -1,6 +1,7 @@
 $.fn.skate.defaults.autoplay = false;
 $.fn.skate.defaults.debug = true;
 $.fn.skate.defaults.css = location.href.indexOf('js-only') > -1 ? false : true;
+//$.fn.skate.defaults.transition = 2;
 
 $('.no-animation .skate').skate({animation: 'none', 'keyboard': false});
 cfskate = $('.crossfade-animation .skate').skate({animation: 'crossfade'});

@@ -96,7 +96,7 @@ body > div {
 	margin-top: 20px;
 	padding: 20px 30px;
 	text-transform: uppercase;
-} 
+}
 
 .my-skate-container > ul > li:first-child > a > div,
 .my-skate-container > ul > li:first-child > div {
@@ -211,4 +211,39 @@ body > div > section.cards-animation {
 }
 .my-skate-container .skate > *:nth-child(even) {
 	height: 550px;
+}
+
+
+
+@media (max-width: 640px) {
+	.my-skate-container .skate {
+		height: 200px;
+	}
+	.my-skate-container nav a {
+		color: rgb(243, 236, 220);
+		font-size: 20px;
+		text-decoration: none;
+	}
+	.my-skate-container .skate-slide-navigation {
+		bottom: .25em;
+	}
+	.my-skate-container > ul > li > div h1,
+	.my-skate-container > ul > li > a > div h1 {
+		font-size: 14px;
+	}
+	.my-skate-container > ul > li > div p,
+	.my-skate-container > ul > li > a > div p {
+		font-size: 20px;
+	}
+	.my-skate-container > ul > li > div p+p,
+	.my-skate-container > ul > li > a > div p+p {
+		font-size: 10px;
+		padding: 5px 20px;
+	}
+	.my-skate-container .skate > * {
+		height: 200px;
+	}
+	.my-skate-container .skate > *:nth-child(even) {
+		height: 220px;
+	}
 }

@@ -213,3 +213,8 @@ CARDS
 	-moz-transition: z-index 0s ease .5s;
 	transition: z-index 0s ease .5s;
 }
+
+
+[data-skate=crossfade].skate > .skate-inactive {
+	display: none;
+}
