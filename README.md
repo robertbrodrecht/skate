@@ -20,7 +20,7 @@ Features:
 
 Features to implement in no particular order:
 * Progress bar for current slide duration.
-* Classes change to indicate current behavior.
+* Container classes change to indicate current activity.
 * Selector settings for tweaking default elements. (Needs testing; JS Feature)
 * Create navigation in JS or reuse CSS navigation elements.
 
