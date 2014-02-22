@@ -31,5 +31,4 @@ Other hopes and dreams that are at the very bottom of the priority list:
 * Solve the Montevallo problem if possible.
 * Custom namespaces.
 
-Know Bugs:
-* When using swipe touch controls with height match going from a taller slide to a shorter slide, not-active slides can be seen in the background during height animation.
+No Know Bugs.

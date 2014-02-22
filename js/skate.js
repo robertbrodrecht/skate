@@ -545,8 +545,6 @@ $.fn.skate = function(settings) {
 					wascurrent.one(
 							'webkitTransitionEnd MozTransitionEnd transitionEnd',
 							function() {
-								// Clear all styles from slides.
-								me.slides.all.removeAttr('style');
 								
 								// Add back CSS support if it was there.
 								if(jqme.data('had-skate-css-class')) {
@@ -559,6 +557,13 @@ $.fn.skate = function(settings) {
 								
 								// Reset the animation.
 								jqme.attr('data-skate', jqme.data('animation-type'));
+								
+								// Clear all styles from slides.
+								setTimeout(
+									function(){
+										me.slides.all.removeAttr('style');
+									}, 500
+								);
 								
 								// Clear data from the gesture.
 								jqme.data('touchstart', '');
