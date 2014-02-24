@@ -19,10 +19,10 @@ Features:
 * Custom events: skateReady, skateContainerHeightAdjustStart, skateContainerHeightAdjustEnd, skateTransitionStart, skateTransitionEnd, skateNoneTransitionStart, skateNoneTransitionEnd, skateCrossfadeTransitionStart, skateCrossfadeTransitionEnd, skateSlideTransitionStart, skateSlideTransitionEnd, skateCardsTransitionStart, skateCardsTransitionEnd
 
 Features to implement in no particular order:
+* Create navigation in JS or reuse CSS navigation elements. (Margins after relocate are bad. Create slide nav not there.  Etc)
 * Progress bar for current slide duration.
 * Container classes change to indicate current activity.
 * Selector settings for tweaking default elements. (Needs testing; JS Feature)
-* Create navigation in JS or reuse CSS navigation elements.
 
 Features under consideration:
 * Ajax load additional slides.
@@ -31,4 +31,5 @@ Other hopes and dreams that are at the very bottom of the priority list:
 * Solve the Montevallo problem if possible.
 * Custom namespaces.
 
-No Know Bugs.
+Know Issues:
+* heightmatch animation may need to fire after transitions.  Kinda stutters on a new rMBP.

@@ -46,10 +46,6 @@ ul.skate > li {
 	width: 100%;
 }
 
-.skate ~ nav { 
-	position: relative;
-}
-
 .skate nav ul,
 .skate nav ul li,
 .skate ~ nav ul,
@@ -59,10 +55,8 @@ ul.skate > li {
 
 .skate-next-prev a {
 	color: inherit;
-	margin-top: -0.5em;
 	position: absolute;
 	text-decoration: none;
-	top: 50%;
 	z-index: 99;
 }
 

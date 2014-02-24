@@ -19,6 +19,12 @@ $.fn.skate = function(settings) {
 	// Whether there is CSS transitions support.
 	var transitions = false;
 	
+	// The next/previous nav that might be created.
+	var navNextPrev = [];
+	
+	// The Slide Nav
+	var navSlides = [];
+	
 	// Whether to show debug messages.
 	var debug = options.debug && window.console;
 
@@ -137,6 +143,22 @@ $.fn.skate = function(settings) {
 					}
 				);
 		}
+		if(navNextPrev.length) {
+			me.slides.nav.find('a[href^=#]').removeClass('skate-slide-current');
+			me.slides.nav.find('a[href^=#' + me.slides.current.attr('id') + ']')
+				.addClass('skate-slide-current'); 
+			navNextPrev.find('.skate-prev').attr(
+					'href', me.slides.current.data('skate-prev-id')
+				).html(
+					me.slides.current.data('skate-prev-char')
+				);
+			navNextPrev.find('.skate-next').attr(
+					'href', me.slides.current.data('skate-next-id')
+				).html(
+					me.slides.current.data('skate-next-char')
+				);
+		}
+		
 	}
 	
 	// Update CSS transitions to respect JS settings.
@@ -345,7 +367,8 @@ $.fn.skate = function(settings) {
 			'current': false,
 			'next': false,
 			'previous': false,
-			'all': []
+			'all': [],
+			'nav': jqme.find(options.slidenav)
 		};
 	
 	// The autoplay interval
@@ -588,6 +611,73 @@ $.fn.skate = function(settings) {
 		me.slides.current = me.slides.all.filter($(location.hash));
 		location.hash = '';
 	}
+	
+	if(1===2) { //################################################
+	
+	// If merging is requested.
+	if(options.createnav === 'merge') {
+		// Prep slides for rearranging the nav.
+		jqme.find(options.nextprevnav).each(
+			function() {
+				var el = $(this),
+					parent = el.closest(me.slides.all),
+					anext = el.find('a.skate-next'),
+					aprev = el.find('a.skate-prev');
+				parent.data('skate-next-id', anext.attr('href'))
+					.data('skate-next-char', anext.html());
+				parent.data('skate-prev-id', aprev.attr('href'))
+					.data('skate-prev-char', aprev.html());
+			}
+		).remove();
+	} else if(options.createnav === 'create') {
+		me.slides.all.each(
+				function() {
+					var uuid = 'skate-uuid-', i = 1;
+					$(this).data('skate-next-char', options.next)
+						.data('skate-prev-char', options.previous);
+					if(!$(this).attr('id')) {
+						while($('#' + uuid+i).length) {
+							i++;
+						}
+						$(this).attr('id', uuid+i);
+					}
+				}
+			).each(
+				function() {
+					var el = $(this);
+					el.data('skate-next-id', '#' + getNextSlide(el).attr('id'))
+						.data('skate-prev-id', '#' + getPreviousSlide(el).attr('id'));
+				}
+			);
+	}
+	
+	// Create the navigation shell.
+	if(
+		options.createnav === 'merge' || 
+		options.createnav === 'create'
+	) {
+		if(!jqme.find(options.slidenav).length) {
+			navNextPrev = jqme.parent().append('<nav></nav>');
+			
+		}
+		navNextPrev = jqme.find(options.slidenav).append(
+				'<ul class="skate-next-prev"><li><a href="#" class="skate-prev"></a></li>' + 
+				'<li><a href="#" class="skate-next"></a></li></ul>'
+			);
+
+		if(options.createnav === 'create' && !jqme.find('.skate-slide-navigation').length) {
+			navSlides = $('<ul class="skate-slide-navigation"></ul>')
+			jqme.find(options.slidenav).prepend(navSlides);
+			
+			me.slides.all.each(
+					function() {
+						navSlides.append($('<li><a href="#' + $(this).attr('id') + '">' + options.dot + '</a></li>'));
+					}
+				);
+		}
+	}
+	
+	} //################################################
 		
 	setNextPreviousFromCurrent();
 	setCurrentClass();
@@ -616,6 +706,12 @@ $.fn.skate.defaults = {
 	'transition': .5,			// How long it should take to transition between slides.
 	'slides': '> *',			// Query to get slide elements relative to container.
 	'first': ':first-child',	// Filter slides and use this as the first slide.
+	'nextprevnav': 'li > nav',	// Selector to get to the left/right navs.
+	'slidenav': '~ nav',		// Selector to get to the slide nav.
+	'createnav': 'merge',		// Handle nav by: merge, create, or none
+	'previous': '≺',			// The html for the previous link.
+	'next': '≻',				// The html for the next link.
+	'dot': '●',					// The html for the next link.
 	'css': true,				// Whether to use CSS3 transitions when available.
 	'keyboard': true,			// Whether this slider has keyboard control capability.
 	'touch': true,				// Whether this slider has touch control capability.
