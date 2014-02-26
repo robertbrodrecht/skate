@@ -612,8 +612,6 @@ $.fn.skate = function(settings) {
 		location.hash = '';
 	}
 	
-	if(1===2) { //################################################
-	
 	// If merging is requested.
 	if(options.createnav === 'merge') {
 		// Prep slides for rearranging the nav.
@@ -676,8 +674,6 @@ $.fn.skate = function(settings) {
 				);
 		}
 	}
-	
-	} //################################################
 		
 	setNextPreviousFromCurrent();
 	setCurrentClass();

@@ -43,14 +43,24 @@ ul.skate > li {
 
 .skate nav,
 .skate ~ nav {
+	display: inline-block;
+	height: 0;
+	vertical-align: top;
 	width: 100%;
 }
 
 .skate nav ul,
+.skate ~ nav ul {
+	display: inline-block;
+	height: 0;
+	vertical-align: top;
+}
+
 .skate nav ul li,
-.skate ~ nav ul,
 .skate ~ nav ul li {
-	display: inline;
+	display: inline-block;
+	height: 0;
+	vertical-align: top;
 }
 
 .skate-next-prev a {

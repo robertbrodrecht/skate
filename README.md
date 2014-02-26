@@ -19,7 +19,7 @@ Features:
 * Custom events: skateReady, skateContainerHeightAdjustStart, skateContainerHeightAdjustEnd, skateTransitionStart, skateTransitionEnd, skateNoneTransitionStart, skateNoneTransitionEnd, skateCrossfadeTransitionStart, skateCrossfadeTransitionEnd, skateSlideTransitionStart, skateSlideTransitionEnd, skateCardsTransitionStart, skateCardsTransitionEnd
 
 Features to implement in no particular order:
-* Create navigation in JS or reuse CSS navigation elements. (Margins after relocate are bad. Create slide nav not there.  Etc)
+* Create navigation in JS or reuse CSS navigation elements.
 * Progress bar for current slide duration.
 * Container classes change to indicate current activity.
 * Selector settings for tweaking default elements. (Needs testing; JS Feature)
@@ -33,3 +33,4 @@ Other hopes and dreams that are at the very bottom of the priority list:
 
 Know Issues:
 * heightmatch animation may need to fire after transitions.  Kinda stutters on a new rMBP.
+* Custom events are done with trigger().  Not sure if those should be jQ's special events.

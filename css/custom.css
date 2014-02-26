@@ -41,18 +41,20 @@ body > div {
 /* Custom classes to make it all look right. */
 .my-skate-container .skate-next-prev a {
 	color: inherit;
-	margin-top: -0.5em;
+	margin-bottom: -0.5em;
 	position: absolute;
 	text-decoration: none;
-	top: 50%;
+	bottom: 50%;
 	z-index: 99;
 }
 
 .my-skate-container .skate ~ nav .skate-next-prev a {
+	color: inherit;
 	margin-bottom: -0.5em;
-	margin-top: auto;
+	position: absolute;
+	text-decoration: none;
 	bottom: 50%;
-	top: auto;
+	z-index: 99;
 }
 
 .my-skate-container {
@@ -154,7 +156,7 @@ body > div {
 }
 
 .my-skate-container .skate-slide-navigation {
-	bottom: 1em;
+	bottom: 4em;
 	left: 0;
 	text-align: center;
 	width: 100%;
@@ -235,9 +237,11 @@ body > div > section.cards-animation {
 .my-skate-container .skate > * {
 	height: 500px;
 }
+/*
 .my-skate-container .skate > *:nth-child(even) {
 	height: 550px;
 }
+*/
 
 
 
