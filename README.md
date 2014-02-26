@@ -19,7 +19,7 @@ Features:
 * Custom events: skateReady, skateContainerHeightAdjustStart, skateContainerHeightAdjustEnd, skateTransitionStart, skateTransitionEnd, skateNoneTransitionStart, skateNoneTransitionEnd, skateCrossfadeTransitionStart, skateCrossfadeTransitionEnd, skateSlideTransitionStart, skateSlideTransitionEnd, skateCardsTransitionStart, skateCardsTransitionEnd
 
 Features to implement in no particular order:
-* Create navigation in JS or reuse CSS navigation elements.
+* Create navigation in JS or reuse CSS navigation elements. (Implemented for create / merge but may need more options)
 * Progress bar for current slide duration.
 * Container classes change to indicate current activity.
 * Selector settings for tweaking default elements. (Needs testing; JS Feature)
