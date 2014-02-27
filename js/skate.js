@@ -334,24 +334,38 @@ $.fn.skate = function(settings) {
 		}
 	}
 	
+	me.recalculateHeight = function() {
+		me.slides.all.each(
+			function() {
+				var el = $(this),
+					oh = el.outerHeight();
+					
+				el.css({'height': oh + 'px'});
+				if(me.slides.current.get(0) === this) {
+					me.css({'height': oh + 'px'});
+				}
+			}
+		);
+	};
+	
 	// Handle swapping to next slide.
 	me.setKeyboardFocus = function() {
 		body.data('skate-key-event-attached', me);
-	}
+	};
 	
 	// Handle swapping to next slide.
 	me.nextSlide = function() {
 		me.slides.current = getNextSlide();
 		setNextPreviousFromCurrent();
 		setCurrentClass();
-	}
+	};
 	
 	// Handle swapping to previous slide.
 	me.previousSlide = function() {
 		me.slides.current = getPreviousSlide();
 		setNextPreviousFromCurrent();
 		setCurrentClass();
-	}
+	};
 	
 	// Add the transitions to the delay in case the transition time is very long.
 	options.delay += options.transition;
@@ -679,15 +693,8 @@ $.fn.skate = function(settings) {
 	setCurrentClass();
 	
 	if(options.heightmatch) {
-		me.slides.all.each(
-			function() {
-				var el = $(this);
-				el.css({'height': el.outerHeight() + 'px'});
-				if(me.slides.current.get(0) === this) {
-					me.css({'height': el.outerHeight() + 'px'});
-				}
-			}
-		);
+		$(window).load(me.recalculateHeight);
+		me.recalculateHeight();
 	}
 	
 	// If autoplay, start autoplaying.
