@@ -678,6 +678,18 @@ $.fn.skate = function(settings) {
 	setNextPreviousFromCurrent();
 	setCurrentClass();
 	
+	if(options.heightmatch) {
+		me.slides.all.each(
+			function() {
+				var el = $(this);
+				el.css({'height': el.outerHeight() + 'px'});
+				if(me.slides.current.get(0) === this) {
+					me.css({'height': el.outerHeight() + 'px'});
+				}
+			}
+		);
+	}
+	
 	// If autoplay, start autoplaying.
 	if(options.autoplay) {
 		me.interval = setInterval(autoplayNext, options.delay * 1000);

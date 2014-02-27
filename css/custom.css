@@ -243,6 +243,9 @@ body > div > section.cards-animation {
 }
 */
 
+#slide-b-2 {
+	height: 529px;
+}
 
 
 @media (max-width: 640px) {
