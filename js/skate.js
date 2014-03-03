@@ -111,7 +111,7 @@ $.fn.skate = function(settings) {
 			me.slides.all.removeClass('skate-target');
 			me.slides.current
 				.one(
-					'webkitTransitionEnd MozTransitionEnd transitionEnd', 
+					'webkitTransitionEnd.slideTransition MozTransitionEnd.slideTransition transitionEnd.slideTransition', 
 					function() {
 						// Fire the events at the end of the transition.
 						jqme.trigger('skateTransitionEnd');
