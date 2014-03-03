@@ -482,7 +482,6 @@ $.fn.skate = function(settings) {
 				}
 				
 				// Otherwise, set the introductory touch and prep to disable CSS.
-				e.preventDefault();
 				jqme.data('touchstart', e.originalEvent.touches[0].pageX);
 				jqme.data('had-skate-css-class', jqme.hasClass('skate-css'));
 				jqme.data('animation-type', jqme.attr('data-skate'));
@@ -515,6 +514,14 @@ $.fn.skate = function(settings) {
 					return;
 				}
 				
+				// Clear the repeat.
+				clearInterval(me.interval);
+				
+				// Prevent default if the swipe is more than 20 to allow scrolling.
+				if(Math.abs(touchstart-touchnow) > 20) {
+					e.preventDefault();
+				}
+				
 				jqme.data('touchlast', touchnow);
 			
 				// The user is trying to swipe, so disable CSS support temporarily.
@@ -522,25 +529,24 @@ $.fn.skate = function(settings) {
 				jqme.attr('data-skate', 'none');
 				
 				// Remove all styles and hide all slides.
-				me.slides.all.removeAttr('style').css('display', 'none');
+				me.slides.all.css('display', 'none');
 				
 				// Depending on the direction, show the correct "background" slide.
 				if(touchnow-touchstart < 0) {
-					me.slides.next.css(enableBackSettings);
+					me.slides.next.removeAttr('style').css(enableBackSettings);
 				} else {
-					me.slides.previous.css(enableBackSettings);
+					me.slides.previous.removeAttr('style').css(enableBackSettings);
 				}
 				
 				// Make sure the current slide is visible.
-				me.slides.current.css(currentSlideSettings);
+				me.slides.current.removeAttr('style').css(currentSlideSettings);
 			}
 		).on(
 			'touchend',
 			function(e) {
 				var translate = 'translateX(0)',
 					touchnow = jqme.data('touchlast'),
-					touchstart = jqme.data('touchstart'),
-					wascurrent = me.slides.current;
+					touchstart = jqme.data('touchstart');
 					
 				// If the user is hitting navigation, ignore all of this.
 				if($(e.target).is('.skate-slide-navigation *, .skate-next-prev *')) {
@@ -548,44 +554,36 @@ $.fn.skate = function(settings) {
 				}
 				
 				// If the user just tapped, there won't be any last-touch data.
-				if(!touchnow) {
-					// If the target is an anchor, click it.
-					if($(e.target).is('a')) {
-						$(e.target).is('a').trigger('click');
-						
-					// If not, find something to click.
-					} else if(me.slides.current.children('a').length) {
-						me.slides.current.children('a').trigger('click');
-					}
-				
-				// The user has swiped, so we need to figure out what to do.
-				} else {
+				if(touchnow) {
 					// Set the transitions for the old current to animate out.
-					wascurrent.css(
-							{
-								'-webkit-transition': '-webkit-transform .1s ease-in',
-								'-moz-transition': '-webkit-transform .1s ease-in',
-								'transition': 'transform .1s ease-in'
-							}
-						);
-						
+					me.slides.current.css(
+						{
+							'-webkit-transition': 'all .1s ease-in',
+							'-moz-transition': 'all .1s ease-in',
+							'transition': 'all .1s ease-in'
+						}
+					);
+										
 					// Set where the old current will animate to and prep the new current.
-					if(touchnow-touchstart < -20) {
+					if(touchnow-touchstart < -50) {
 						translate = 'translateX(-100%)';
-						me.slides.current = getNextSlide();
-					} else if(touchnow-touchstart > 20) {
+					} else if(touchnow-touchstart > 50) {
 						translate = 'translateX(100%)';
-						me.slides.current = getPreviousSlide();
 					}
-					
+					 
 					// Set a transition end and animate out.
-					wascurrent.one(
-							'webkitTransitionEnd MozTransitionEnd transitionEnd',
+					me.slides.current.one(
+							'webkitTransitionEnd.swipeTransition MozTransitionEnd.swipeTransition transitionEnd.swipeTransition',
 							function() {
-								
 								// Add back CSS support if it was there.
 								if(jqme.data('had-skate-css-class')) {
 									jqme.addClass('skate-css');
+								}
+								
+								if(touchnow-touchstart < -50) {
+									me.slides.current = getNextSlide();
+								} else if(touchnow-touchstart > 50) {
+									me.slides.current = getPreviousSlide();
 								}
 								
 								// Set next and previous, and set the current class.
@@ -599,7 +597,7 @@ $.fn.skate = function(settings) {
 								setTimeout(
 									function(){
 										me.slides.all.removeAttr('style');
-									}, 500
+									}, options.transition
 								);
 								
 								// Clear data from the gesture.
@@ -608,7 +606,7 @@ $.fn.skate = function(settings) {
 								jqme.data('had-skate-css-class', '');
 								jqme.data('animation-type', '');
 							}
-						).css('transform', translate);
+						).css({'transform': translate});
 				}
 			}
 		);
