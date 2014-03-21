@@ -339,7 +339,8 @@ $.fn.skate = function(settings) {
 			function() {
 				var el = $(this),
 					oh = el.outerHeight();
-					
+				el.css('height', 'auto');
+				oh = el.outerHeight();
 				el.css({'height': oh + 'px'});
 				if(me.slides.current.get(0) === this) {
 					me.css({'height': oh + 'px'});
