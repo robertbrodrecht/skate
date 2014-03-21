@@ -65,6 +65,7 @@ ul.skate > li {
 
 .skate-next-prev a {
 	color: inherit;
+	line-height: 1;
 	position: absolute;
 	text-decoration: none;
 	z-index: 99;
