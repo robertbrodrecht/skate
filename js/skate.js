@@ -692,7 +692,7 @@ $.fn.skate = function(settings) {
 	setCurrentClass();
 	
 	if(options.heightmatch) {
-		$(window).load(me.recalculateHeight);
+		$(window).load(me.recalculateHeight).resize(me.recalculateHeight);
 		me.recalculateHeight();
 	}
 	
