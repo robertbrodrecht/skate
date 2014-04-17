@@ -31,6 +31,7 @@ body > div {
 /* Required to set a height and width. */
 .my-skate-container  {
 	position: relative;
+	height: 500px;
 }
 .my-skate-container .skate {
 	height: 500px;

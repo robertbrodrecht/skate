@@ -687,6 +687,8 @@ $.fn.skate = function(settings) {
 				);
 		}
 	}
+	
+	me.slides.nav = jqme.find(options.slidenav)
 		
 	setNextPreviousFromCurrent();
 	setCurrentClass();
