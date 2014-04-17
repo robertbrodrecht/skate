@@ -672,8 +672,8 @@ $.fn.skate = function(settings) {
 			
 		}
 		navNextPrev = jqme.find(options.slidenav).append(
-				'<ul class="skate-next-prev"><li><a href="#" class="skate-prev"></a></li>' + 
-				'<li><a href="#" class="skate-next"></a></li></ul>'
+				'<ul class="skate-next-prev"><li><a href="#" class="skate-prev">' + options.previous + '</a></li>' + 
+				'<li><a href="#" class="skate-next">' + options.next + '</a></li></ul>'
 			);
 
 		if(options.createnav === 'create' && !jqme.find('.skate-slide-navigation').length) {
