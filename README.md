@@ -5,6 +5,26 @@ Skate is a CSS-based and jQuery extended slide carrousel / image rotator / whate
 
 *Skate is a work in progress!* I'm playing with this in my free time.  While you can probably make use of the work up to this point, you may want to hold off doing anything production related with this code until this message is gone.
 
+How to use (Look at the samples first, OK?) (also, I don't know why the highlighting is weird, too):
+
+```html
+<div class="skate-custom">
+  <ul class="skate skate-css" data-skate="animation-type">
+    <li>
+      <a href="#">
+        <div>
+         SLIDE CONTENT
+        </div>
+      </a>
+    </li>
+  </ul>
+</div>
+```
+
+<code>div.skate-custom</code> is the container for all the skate-stuff (slides, nav, "pips" and "next/prev") and should have some <code>height</code> by default, which would be your "desktop" slide height.  Skate expects you to do the smart stuff, not guess what you mean.  <code>ul.skate</code> holds each slide.  <code>ul.skate > li</code> is the slide CONTAINER, NOT THE SLIDE.  DO NOT STYLE <code>ul.skate > li</code>!!!  The <code>li</code> handles the animation of what is inside of it.  DO NOT STYLE against the slide container.  
+
+More coming soon in terms of how to use this thing.
+
 Features:
 * Responsive.
 * Animations for crossfade, slide, and cards.
